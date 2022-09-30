@@ -60,9 +60,7 @@ class Installer
             $component = db('iris')->table('componenten')
                 ->insert($data_to_insert)
                 ->execute();
-
-            dd($component);
-
+           
         }
     }
 }
