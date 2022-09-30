@@ -4,9 +4,6 @@
 	"license": "MIT",
 	"type": "library",
 	"version": "1.0.0",
-	"require": {
-		"minimum-stability": "dev"
-	},
 	"authors": [{
 		"name": "The MindOffice",
 		"email": "development@themindoffice.nl"
