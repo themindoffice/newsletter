@@ -4,6 +4,7 @@
 	"description": "Add newsletter addon to Iris",
 	"license": "MIT",
 	"type": "library",
+	"minimum-stability": "dev",
 	"authors": [
         {
             "name": "The MindOffice",
