@@ -10,12 +10,7 @@
 	}],
 	"autoload": {
 		"psr-4": {
-			"modules\\Addons\\": "src/"
+			"modules\\Addons\\": "./src"
 		}
-	},
-	"scripts": {
-		"post-package-install": [
-			"php -r \"copy('vendor/themindoffice/newsletter/src/Newsletter/Newsletter.php', 'modules/Addons/Newsletter/Newsletter.php');\""
-		]
 	}
 }
