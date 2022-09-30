@@ -12,5 +12,10 @@
 		"psr-4": {
 			"modules\\Addons\\": "./src"
 		}
+	},
+	"extra": {
+		"copy-file": {
+			"vendor/themindoffice/newsletter/src": "modules/Addons"
+		}
 	}
 }
