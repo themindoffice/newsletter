@@ -3,7 +3,6 @@
 	"version": "1.0.0",
 	"description": "Add newsletter addon to Iris",
 	"license": "MIT",
-	"minimum-stability": "dev",
 	"type": "library",
 	"authors": [
         {
