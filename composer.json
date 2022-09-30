@@ -1,7 +1,12 @@
 {
-  "name": "themindoffice/newsletter",
-  "description": "Add newsletter addon to Iris",
-  "require": {
-    "php": ">=7.4.0"
-  }
+	"name": "themindoffice/newsletter",
+	"description": "Add newsletter addon to Iris",
+	"require": {
+		"php": ">=7.4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"modules\\Addons\\": "src/"
+		}
+	}
 }
