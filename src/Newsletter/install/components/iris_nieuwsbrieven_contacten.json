@@ -1,0 +1,54 @@
+{
+  "domein_id": "{DOMAIN_ID}",
+  "naam:": "Nieuwsbrief | Contacten",
+  "table_name:": "iris_nieuwsbrieven_contacten",
+  "presentatie:": "1",
+  "viewer:": {
+    "voornaam": {
+      "titel": "Voornaam",
+      "edit": "var"
+    },
+    "achternaam": {
+      "titel": "Achternaam",
+      "edit": "var"
+    },
+    "email": {
+      "titel": "Email",
+      "edit": "var"
+    }
+  },
+  "editor:": {
+    "voornaam": {
+      "titel": "Voornaam",
+      "edit": "var",
+      "options": {
+        "required": "nee"
+      }
+    },
+    "achternaam": {
+      "titel": "Achternaam",
+      "edit": "var",
+      "options": {
+        "required": "nee"
+      }
+    },
+    "email": {
+      "titel": "E-mail",
+      "edit": "var",
+      "options": {
+        "required": "nee"
+      }
+    },
+    "lijsten": {
+      "titel": "Lijsten",
+      "edit": "msel",
+      "db_table": "iris_nieuwsbrieven_lijsten",
+      "db_id": "id",
+      "db_column": "naam",
+      "db_condition": null,
+      "db_ignore_multidomain": 0,
+      "required": "nee"
+    }
+  },
+  "template:": "detail_iris_nieuwsbrieven_contacten"
+}

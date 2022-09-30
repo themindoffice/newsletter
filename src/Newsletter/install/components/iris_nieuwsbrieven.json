@@ -1,0 +1,75 @@
+{
+  "domein_id": "{DOMAIN_ID}",
+  "naam": "Nieuwsbrieven",
+  "table_name": "iris_nieuwsbrieven",
+  "presentatie": "1",
+  "viewer": {
+    "naam": {
+      "titel": "Naam",
+      "edit": "var"
+    },
+    "subject": {
+      "titel": "Onderwerpregel",
+      "edit": "var"
+    }
+  },
+  "editor": {
+    "naam": {
+      "titel": "Naam",
+      "edit": "var",
+      "options": {
+        "required": "ja"
+      }
+    },
+    "onderwerpregel": {
+      "titel": "Onderwerpregel",
+      "edit": "var",
+      "options": {
+        "required": "ja"
+      }
+    },
+    "lijst": {
+      "titel": "Lijst",
+      "edit": "sel",
+      "db_table": "iris_nieuwsbrieven_lijsten",
+      "db_id": "id",
+      "db_column": "naam",
+      "db_condition": null,
+      "db_ignore_multidomain": 0,
+      "required": "nee"
+    },
+    "foto": {
+      "titel": "Foto",
+      "edit": "img",
+      "options": {
+        "required": "nee"
+      }
+    },
+    "omschrijving": {
+      "titel": "Omschrijving",
+      "edit": "text",
+      "options": {
+        "required": "nee"
+      }
+    },
+    "knop": {
+      "titel": "Knop",
+      "edit": "sep"
+    },
+    "btn_text": {
+      "titel": "Tekst",
+      "edit": "var",
+      "options": {
+        "required": "nee"
+      }
+    },
+    "btn_link": {
+      "titel": "Link",
+      "edit": "var",
+      "options": {
+        "required": "nee"
+      }
+    }
+  },
+  "template": "detail_iris_nieuwsbrieven"
+}
