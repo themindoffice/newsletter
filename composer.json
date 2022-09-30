@@ -1,6 +1,13 @@
 {
 	"name": "themindoffice/newsletter",
+	"version": "1.0.0",
 	"description": "Add newsletter addon to Iris",
+	"authors": [
+        {
+            "name": "The MindOffice",
+            "email": "development@themindoffice.nl"
+        }
+    ],
 	"require": {
 		"php": ">=7.4.0"
 	},
