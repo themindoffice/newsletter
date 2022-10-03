@@ -13,7 +13,5 @@
 			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
 		}
 	},
-	"scripts": {
-		"post-update-cmd": "php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
-	}
+	"scripts": "php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
 }
