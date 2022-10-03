@@ -11,6 +11,11 @@ class Newsletter
     {
         //
     }
+    
+    public function locator()
+    {
+        echo 'Test';
+    }
 
     public function install()
     {
