@@ -1,9 +1,11 @@
 <?php
 
-$dir = 'modules/Addons/Newsletter';
+require_once 'Installer.php';
 
-echo 'Creating folder...' . PHP_EOL;
+use Modules\Addons\Newsletter\Install\Installer;
 
-if (!is_dir($dir)) {
-    mkdir($dir);
-}
+$installer = new Installer();
+
+$installer->run();
+
+

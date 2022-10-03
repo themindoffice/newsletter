@@ -6,22 +6,6 @@ use Modules\Addons\Newsletter\Install\Installer;
 
 class Newsletter
 {
-
-    public function __construct()
-    {
-        //
-    }
-
-    public function install()
-    {
-        require_once $_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter/install/Installer.php';
-
-        $installer = new Installer();
-
-        $installer->tables();
-        $installer->components();
-    }
-
     public function copy(){
 
         global $argv;

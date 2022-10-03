@@ -17,6 +17,18 @@ class Installer
         }
     }
 
+    public function run()
+    {
+        $dir = $_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter';
+
+        if (!is_dir($dir)) {
+
+            echo 'Creating folder...' . PHP_EOL;
+
+            mkdir($dir);
+        }
+    }
+
     public function tables()
     {
         $current_tables = array_column(raw('SHOW TABLES'), 'Tables_in_' . $_ENV['DB_NAME']);
