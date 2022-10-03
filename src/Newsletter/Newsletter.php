@@ -14,7 +14,7 @@ class Newsletter
     
     public static function locator()
     {
-        mkdir($_SERVER['DOCUMENT_ROOT'] . 'modules/Addons/Newsletter');
+        mkdir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter');
     }
 
     public function install()
