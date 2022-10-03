@@ -9,7 +9,7 @@
 		"email": "development@themindoffice.nl"
 	}],
 	"require": {
-		"slowprog/composer-copy-file": "*"
+		"slowprog/composer-copy-file": "~0.3"
 	},
 	"autoload": {
 		"psr-4": {
@@ -26,6 +26,9 @@
 	},
 	"extra": {
 		"copy-file": {
+			"vendor/themindoffice/newsletter/src/": "modules/Addons/Newsletter/"
+		},
+		"copy-file-dev": {
 			"vendor/themindoffice/newsletter/src/": "modules/Addons/Newsletter/"
 		}
 	}
