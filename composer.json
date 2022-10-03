@@ -16,7 +16,7 @@
 	"scripts": {
 		"post-install-cmd": [
 			"@php -r \"mkdir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter');\"",
-			"# <info>For your info</info>",
+			"# <info>For your info</info>"
 		]
 	}
 }
