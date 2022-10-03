@@ -16,7 +16,7 @@
 	"scripts": {
 		"post-package-install": [
 			"@php -r \"mkdir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter');\"",
-			"echo 'Test'"
+			"# <info>For your info</info>",
 		]
 	}
 }
