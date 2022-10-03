@@ -14,8 +14,8 @@
 		}
 	},
 	"scripts": {
-		"post-package-install": {
+		"post-package-install": [
 			"@php -r \"is_dir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter') || mkdir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter');\""
-		}
+		]
 	}
 }
