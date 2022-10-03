@@ -14,8 +14,8 @@
 		}
 	},
 	"scripts": {
-		"post-install-cmd": [
-			"# <info>For your info</info>"
-		]
+		"post-root-package-install": [
+		    "@php -r \"file_exists('.test') || copy('.test.example', '.test');\""
+		],
 	}
 }
