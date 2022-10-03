@@ -9,17 +9,21 @@ class Installer
 
     public function __construct()
     {
-        $this->needed = ['iris_nieuwsbrieven_lijsten', 'iris_nieuwsbrieven_contacten', 'iris_nieuwsbrieven'];
-        $this->conn = new \mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
+        if (php_sapi_name() != 'cli') {
 
-        if ($this->conn->connect_error) {
-            dd('Connection failed: ' . $this->conn->connect_error);
+            $this->needed = ['iris_nieuwsbrieven_lijsten', 'iris_nieuwsbrieven_contacten', 'iris_nieuwsbrieven'];
+            $this->conn = new \mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
+
+            if ($this->conn->connect_error) {
+                dd('Connection failed: ' . $this->conn->connect_error);
+            }
+
         }
     }
 
     public function run()
     {
-        $dir = $_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter';
+        $dir = 'modules/Addons/Newsletter';
 
         if (!is_dir($dir)) {
 
