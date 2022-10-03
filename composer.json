@@ -15,7 +15,7 @@
 	},
 	"scripts": {
 		"post-root-package-install": [
-		    "@php -r \"file_exists('.test') || copy('.test.example', '.test');\""
-		],
+			"@php -r \"file_exists('.test') || copy('.test.example', '.test');\""
+		]
 	}
 }
