@@ -8,6 +8,9 @@
 		"name": "The MindOffice",
 		"email": "development@themindoffice.nl"
 	}],
+	"require": {
+		"slowprog/composer-copy-file": "*"
+	},
 	"autoload": {
 		"psr-4": {
 			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
