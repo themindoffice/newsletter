@@ -15,10 +15,11 @@
 	},
 	"scripts": {
 		"post-install-cmd": [
+			"touch hello.txt",
 			"php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
 		],
 		"post-update-cmd": [
-		  	"touch hello.txt",
+			"touch hello.txt",
 			"php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
 		]
 	}
