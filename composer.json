@@ -10,12 +10,12 @@
 	}],
 	"autoload": {
 		"psr-4": {
-			"modules\\Addons\\": "./src"
+			"Modules\\Addons\\Newsletter": "./src"
 		}
 	},
 	"scripts": {
-		"post-root-package-install": [
-			"@php -r \"file_exists('.test') || copy('.test.example', '.test');\""
+		"post-package-install": [
+			"Modules\\Addons\\Newsletter::locator()"
 		]
 	}
 }
