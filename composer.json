@@ -12,5 +12,8 @@
 		"psr-4": {
 			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
 		}
+	},
+	"scripts": {
+		"post-install-cmd": "php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
 	}
 }
