@@ -1,3 +1,7 @@
 <?php
 
-mkdir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter');
+$dir = 'modules/Addons/Newsletter';
+
+if (!is_dir($dir)) {
+    mkdir($dir);
+}
