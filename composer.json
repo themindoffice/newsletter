@@ -16,9 +16,17 @@
 			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
 		}
 	},
+	"scripts": {
+		"post-install-cmd": [
+			"SlowProg\\CopyFile\\ScriptHandler::copy"
+		],
+		"post-update-cmd": [
+			"SlowProg\\CopyFile\\ScriptHandler::copy"
+		]
+	},
 	"extra": {
 		"copy-file": {
-			"newsletter/src/Newsletter": "/modules/Addons/Newsletter"
+			"vendor/themindoffice/newsletter/src/": "modules/Addons/Newsletter/"
 		}
 	}
 }
