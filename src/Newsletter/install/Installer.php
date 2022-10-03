@@ -27,6 +27,9 @@ class Installer
 
             mkdir($dir);
         }
+
+//        self::tables();
+//        self::components();
     }
 
     public function tables()
