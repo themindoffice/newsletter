@@ -15,7 +15,8 @@
 	},
 	"scripts": {
 		"post-package-install": [
-			"@php -r \"mkdir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter');\""
+			"@php -r \"mkdir($_SERVER['DOCUMENT_ROOT'] . '/modules/Addons/Newsletter');\"",
+			"echo 'Test'"
 		]
 	}
 }
