@@ -14,8 +14,6 @@
 		}
 	},
 	"scripts": {
-		"post-package-install": [
-			"Modules\\Addons\\Newsletter::locator()"
-		]
+		"post-install-cmd": "Modules\\Addons\\Newsletter::locator"
 	}
 }
