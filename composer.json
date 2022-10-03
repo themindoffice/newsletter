@@ -16,14 +16,9 @@
 			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
 		}
 	},
-	"scripts": {
-		"post-install-cmd": [
-			"touch hello.txt",
-			"php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
-		],
-		"post-update-cmd": [
-			"touch hello.txt",
-			"php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
-		]
+	"extra": {
+		"copy-file": {
+			"vendor/themindoffice/newsletter/src/Newsletter/": "modules/Addons/Newsletter/"
+		}
 	}
 }
