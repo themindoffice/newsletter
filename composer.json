@@ -18,6 +18,7 @@
 			"php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
 		],
 		"post-update-cmd": [
+		  	"touch hello.txt",
 			"php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
 		]
 	}
