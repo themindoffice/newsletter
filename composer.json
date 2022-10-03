@@ -13,9 +13,9 @@
 			"modules\\Addons\\": "./src"
 		}
 	},
-	"extra": {
-		"copy-file": {
-			"vendor/themindoffice/newsletter/src/Newsletter/Newsletter.php": "modules/Addons/Newsletter/Newsletter.php"
+	"scripts": {
+		"post-package-install": {
+			"php -r \"mkdir('modules/Addons/Newsletter');\""
 		}
 	}
 }
