@@ -14,6 +14,6 @@
 		}
 	},
 	"scripts": {
-		"test": "php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
+		"post-create-project-cmd": "php -r \"require 'vendor/themindoffice/newsletter/src/Newsletter/install/run.php';\""
 	}
 }
