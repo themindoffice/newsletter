@@ -12,9 +12,9 @@ class Newsletter
         //
     }
     
-    public function locator()
+    public static function locator()
     {
-        echo 'Test';
+        mkdir($_SERVER['DOCUMENT_ROOT'] . 'modules/Addons/Newsletter');
     }
 
     public function install()
