@@ -10,7 +10,7 @@
 	}],
 	"autoload": {
 		"psr-4": {
-			"Modules\\Addons\\Newsletter\\": "./src"
+			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
 		}
 	},
 	"scripts": {
