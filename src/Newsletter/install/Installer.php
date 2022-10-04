@@ -11,7 +11,7 @@ class Installer
     {
         if (php_sapi_name() != 'cli') {
 
-            $this->needed = ['iris_nieuwsbrieven_lijsten', 'iris_nieuwsbrieven_contacten', 'iris_nieuwsbrieven'];
+            $this->needed = ['iris_nieuwsbrieven_lijsten', 'iris_nieuwsbrieven_contacten', 'iris_nieuwsbrieven', 'iris_nieuwsbrieven_uitschrijvingen', 'iris_nieuwsbrieven_verzendlijst'];
             $this->conn = new \mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
 
             if ($this->conn->connect_error) {
@@ -23,17 +23,9 @@ class Installer
 
     public function run()
     {
-        $dir = 'modules/Addons/Newsletter';
-
-        if (!is_dir($dir)) {
-
-            echo 'Creating folder...' . PHP_EOL;
-
-            mkdir($dir);
-        }
-
-//        self::tables();
-//        self::components();
+        self::tables();
+        self::data();
+        self::components();
     }
 
     public function tables()
@@ -45,6 +37,22 @@ class Installer
             if (isset($current_tables[$needed])) { continue; }
 
             $statement = file_get_contents(__dir__ . '/tables/'.$needed.'.sql');
+            $this->conn->query($statement);
+
+        }
+    }
+
+    public function data()
+    {
+        foreach ($this->needed ?? [] as $needed) {
+
+            if (isset($current_tables[$needed])) { continue; }
+
+            $file = __dir__ . '/data/'.$needed.'.sql';
+
+            if (!file_exists($file)) { continue; }
+
+            $statement = file_get_contents($file);
             $this->conn->query($statement);
 
         }
@@ -64,7 +72,11 @@ class Installer
 
             if (isset($current_components[$needed])) { continue; }
 
-            $component = file_get_contents(__dir__ . '/components/'.$needed.'.json');
+            $file = __dir__ . '/components/'.$needed.'.json';
+
+            if (!file_exists($file)) { continue; }
+
+            $component = file_get_contents($file);
             $component = json_decode($component, true);
 
             $data_to_insert = [];
@@ -76,7 +88,7 @@ class Installer
                 $data_to_insert[$k] = (gettype($v) == 'array' ? json_encode($v) : $v);
             }
 
-            $component = db('iris')->table('componenten')
+            db('iris')->table('componenten')
                 ->insert($data_to_insert)
                 ->execute();
            

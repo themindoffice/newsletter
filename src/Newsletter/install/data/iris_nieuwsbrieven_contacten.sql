@@ -1,0 +1,2 @@
+INSERT INTO `iris_nieuwsbrieven_contacten` (`id`, `voornaam`, `achternaam`, `email`, `lijsten_id`, `active`, `options`, `created`, `modified`) VALUES
+(1, 'Iris', 'de Goede', 'support@themindoffice.nl', '[\"1\"]', 'ja', NULL, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());

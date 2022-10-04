@@ -6,7 +6,95 @@ use Modules\Addons\Newsletter\Install\Installer;
 
 class Newsletter
 {
+    public function install()
+    {
+        require_once 'install/Installer.php';
+
+        $installer = new Installer();
+        $installer->run();
+    }
+
+    public function popup($body) {
+        ob_start();
+        include 'popup.php';
+        return ob_get_clean();
+    }
+
+    public function content($newsletter_id)
+    {
+        $url = $_ENV['APP_DOMAIN'] . url('iris_nieuwsbrieven', $newsletter_id);
+        return file_get_contents($url);
+    }
+
     public function duplicate() {
+
+        global $argv;
+
+        $newsletter_to_duplicate = db()->table('iris_nieuwsbrieven')
+            ->select()
+            ->find($argv[2]);
+
+        unset(
+            $newsletter_to_duplicate['id'],
+            $newsletter_to_duplicate['sent_at'],
+            $newsletter_to_duplicate['modified']
+        );
+
+        $duplicated_newsletter_id = db()->table('iris_nieuwsbrieven')
+            ->insert(array_merge($newsletter_to_duplicate, [
+                'naam' => '[KOPIE] ' . output($newsletter_to_duplicate['naam']),
+                'created' => time(),
+            ]))
+            ->execute();
+
+        db()->table('seo')->insert([
+            'tabel' => 'iris_nieuwsbrieven',
+            'tabel_id' => $duplicated_newsletter_id,
+            'page_url' => time(),
+            'language' => 'nl'
+        ])->execute();
+
+        echo $this->popup('
+            <h4 class="mb-4">Kopie gemaakt</h4>
+            <p>Ververs de pagina om de nieuwsbrief te zien.</a>                        
+        ');
+
+    }
+
+    public function cronjob() {
+
+        $items = db()->table('iris_nieuwsbrieven_verzendlijst')
+            ->select()
+            ->whereNull('sent_at')
+            ->limit(5)
+            ->get();
+
+        foreach($items ?? [] as $item) {
+
+            db()->table('iris_nieuwsbrieven_verzendlijst')
+                ->update(['sent_at' => time()])
+                ->where('id', $item['id'])
+                ->execute();
+
+            $newsletter = db()->table('iris_nieuwsbrieven')
+                ->select()
+                ->find($item['iris_nieuwsbrieven_id']);
+
+            email()
+                ->sender([
+                    'address' => $_ENV['MAIL_FROM_ADDRESS'],
+                    'name' => $_ENV['MAIL_FROM_NAME']
+                ])
+                ->to($item['email'])
+                ->type('plain')
+                ->subject($newsletter['naam'])
+                ->message($newsletter['html'])
+                ->send();
+
+        }
+    }
+
+    public function test() {
 
         global $argv;
 
@@ -14,309 +102,128 @@ class Newsletter
             ->select()
             ->find($argv[2]);
 
-        $id = db()->table('iris_nieuwsbrieven')->insert(array(
-            'naam' => 'Copy: '.$newsletter['naam'],
-            'omschrijving' => $newsletter['omschrijving'],
-            'header_knop_titel' => $newsletter['header_knop_titel'],
-            'header_knop_link' => $newsletter['header_knop_link'],
-            'header_achtergrond' => $newsletter['header_achtergrond'],
-            'send' => 0,
-            'created' => time()
-        ))->execute();
+        if ($argv[3] == 'popup') {
 
-        db()->table('seo')->insert(array(
-            'tabel' => 'nieuwsbrieven',
-            'tabel_id' => $id,
-            'page_url' => time(),
-            'language' => 'nl'
-        ))->execute();
+            $email = substr($argv[4], 0, strpos($argv[4], '?'));
 
-        $items = db()->table('nieuwsbrieven_items')
-            ->select()
-            ->where('nieuwsbrieven_id', $argv[2])
-            ->orderBy('volgorde')
-            ->get();
+            echo $this->popup('                       
+                <h4 class="mb-4">Verstuur test mail</h4>
+                <form action="/newsletter/test/'.$newsletter['id'].'/send" class="validate">
+                    <input type="hidden" name="gender">
+                    <input type="text" name="email" class="form-control mb-3" value="'.$email.'">
+                    
+                    <div class="feedback"></div>
+                    
+                    <button class="btn btn-warning w-100" type="submit">Verstuur test</button>
+                </form>                        
+            ');
 
-        foreach($items as $item){
+        } else {
 
-            db()->table('nieuwsbrieven_items')->insert(array(
-                'naam' => $item['naam'],
-                'active' => $item['active'],
-                'nieuwsbrieven_id' => $id,
-                'type' => $item['type'],
-                'titel' => $item['titel'],
-                'tekst' => $item['tekst'],
-                'afbeelding' => $item['afbeelding'],
-                'knop_link' => $item['knop_link'],
-                'knop_link_titel' => $item['knop_link_titel'],
-                'confetti_tonen' => $item['confetti_tonen'],
-                'foto_locatie' => $item['foto_locatie'],
-                'rubriek' => $item['rubriek'],
-                'volgorde' => $item['volgorde']
-            ))->execute();
+            parse_str($_POST['data'], $_POST);
 
-        }
-
-
-        echo $this->makePopup('
-            <h4 class="mb-4">Kopie gemaakt</h4>
-            <p>Ververs de pagina om de nieuwsbrief te zien.</a>
-                        
-        ');
-
-    }
-
-
-    public function cronJob(){
-
-        $alleContacten = db()->table('nieuwsbrieven_verzendlijst')->select()->where('send',0)->limit(5)->get();
-
-        foreach($alleContacten as $contact) {
-
-            db()->table('nieuwsbrieven_verzendlijst')->update(array('send' => 1))->where('id', $contact["id"])->execute();
-
-            $nb = db()->table('nieuwsbrieven')->select()->where('id', $contact["nieuwsbrieven_id"])->first();
-
-            $mail = email()
-                ->sender('nieuwsbrief@150jaarcomite.nl')
-                ->to($contact["e_mail"])
-                ->type('plain')
-                ->subject($nb["naam"])
-                ->message($nb["html"]);
-            $mail->send();
-        }
-    }
-
-    private function makePopup($body){
-
-        return '<html>
-                    <head>
-                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-                        <link rel="stylesheet" href="https://iris.themindoffice.dev/css/themes/legacy.css?v=2022011004" />
-                        <style>
-                        body{
-                        font-family: \'Open Sans\'  !important;
-                        }</style>
-                    </head>
-                        <body style="background-color: #F8F9FC;">
-                            <div class="p-4">
-                                '.$body.'
-                            </div>
-                        <script src="/assets/js/jquery.min.js"></script>
-                        <script src="/assets/js/axios/axios.min.js"></script>
-                        <script src="/assets/js/validate.js"></script>
-                    </body>
-               </html>';
-    }
-
-    public function sendNewsletter(){
-
-
-        global $argv;
-
-        if ($argv[2] == "newsletter") {
-
-            $added = array();
-            $newsletterId = $_POST["id"];
-
-            $nieuwsbrief = db()->table('nieuwsbrieven')->select()->where('id', $newsletterId)->first();
-            if ($nieuwsbrief["send"] == 1){
-                echo json_encode(['status' => 'error',  'message' => 'De nieuwsbrief is al verstuurd']);
-                exit();
-            }
-
-
-            $url = 'https://150jaarcomite.nl' . url('nieuwsbrieven', $newsletterId);
-            $content = file_get_contents($url);
-
-            db()->table('nieuwsbrieven')->update(array('html' => $content, 'send' => 1))->where('id', $newsletterId)->execute();
-
-            $alleContacten = db()->table('nieuwsbrieven_contacten')->select()->get();
-            foreach($alleContacten as $contact){
-                if (!in_array($contact["e_mail"],$added)){
-                    $added[] = $contact["e_mail"];
-
-                    $blacklist = db()->table('nieuwsbrieven_uitschrijvingen')->select()->where('email', $contact["e_mail"])->first();
-
-                    if ($blacklist == false) {
-                        db()->table('nieuwsbrieven_verzendlijst')->insert(array(
-                            "nieuwsbrieven_id" => $newsletterId,
-                            "naam" => $contact["naam"],
-                            "e_mail" => $contact["e_mail"],
-                            "send" => 0,
-                            "created" => time()
-                        ))->execute();
-                    }
-                }
-            }
-
-            $alleContacten = db()->table('nieuwsbriefinschrijvingen')->select()->get();
-            foreach($alleContacten as $contact){
-                if (!in_array($contact["email"],$added)){
-                    $added[] = $contact["email"];
-                    $blacklist = db()->table('nieuwsbrieven_uitschrijvingen')->select()->where('email', $contact["e_mail"])->first();
-
-                    if ($blacklist == false) {
-                        db()->table('nieuwsbrieven_verzendlijst')->insert(array(
-                            "nieuwsbrieven_id" => $newsletterId,
-                            "naam" => '',
-                            "e_mail" => $contact["email"],
-                            "send" => 0,
-                            "created" => time()
-                        ))->execute();
-                    }
-                }
-            }
-
-
-            echo json_encode(['status' => 'success', 'clear' => 'all', 'message' => 'De nieuwsbrief is ingepland en zal binnen enkele minuten verstuurd worden.']);
-            exit();
-
-        }
-
-        if ($argv[2] == "test") {
             validate([
                 'email' => 'email',
             ], 'nl');
 
-            $newsletterId = $_POST["id"];
-
-            $info = db()->table('nieuwsbrieven')->select()->where('id', $newsletterId)->first();
-            $url = 'https://150jaarcomite.nl' . url('nieuwsbrieven', $newsletterId);
-            $content = file_get_contents($url);
-
-            $mail = email()
-                ->sender('nieuwsbrief@150jaarcomite.nl')
-                ->to($_POST["email"])
+            email()
+                ->sender([
+                    'address' => $_ENV['MAIL_FROM_ADDRESS'],
+                    'name' => $_ENV['MAIL_FROM_NAME']
+                ])
+                ->to($_POST['email'])
                 ->type('plain')
-                ->subject($info["naam"])
-                ->message($content);
-            $mail->send();
+                ->subject('[TEST] ' . (output($newsletter['onderwerpregel']) != '' ? output($newsletter['onderwerpregel']) : output($newsletter['naam'])))
+                ->message(self::content($newsletter['id']))
+                ->send();
 
-            echo json_encode(['status' => 'success', 'clear' => 'all', 'message' => 'Je ontvangt binnen enkele minuten een test mail.']);
+            echo json_encode([
+                'status' => 'success',
+                'clear' => 'all',
+                'message' => 'Je ontvangt binnen enkele minuten een test mail.'
+            ]);
             exit();
+
+        }
+    }
+
+    public function send()
+    {
+        global $argv;
+
+        $newsletter = db()->table('iris_nieuwsbrieven')
+            ->select()
+            ->find($argv[2]);
+
+        if(isset($argv[3])) {
+            $argv[3] = substr($argv[3], 0, strpos($argv[3], '?'));
         }
 
-    }
+        if (($argv[3] ?? '') == 'popup') {
 
-    public function viewSend()
-    {
-        global $argv;
+            if ($newsletter['sent_at'] != '') {
 
-        $nieuwsbrief = db()->table('nieuwsbrieven')->select()->where('id', $argv[2])->first();
+                echo $this->popup('
+                <h4 class="mb-4">Versturen</h4>
+                
+                <div class="text-center">            
+                    <p>De nieuwsbrief is al verstuurd op ' . date('d-m-Y H:i') . '</p>                
+                </div>
+            ');
+
+            } else {
+
+                echo $this->popup('
+                <h4 class="mb-4">Versturen</h4>
+                
+                <div class="text-center">            
+                    <p>Wil je de nieuwsbrief echt versturen?</p>                
+                    <a href="/newsletter/send/' . $newsletter['id'] . '" class="btn btn-success w-50">Ja, verstuur</a>
+                </div>
+            ');
+
+            }
+
+        } else {
+
+            $content = self::content($newsletter['id']);
+
+            db()->table('iris_nieuwsbrieven')
+                ->update([
+                    'html' => $content,
+//                    'sent_at' => time()
+                ])->where('id', $newsletter['id'])
+                ->execute();
+
+            $contacts = db()->table('iris_nieuwsbrieven_contacten')
+                ->select()
+                ->where('lijsten_id', 'like', '%"'.$newsletter['lijsten_id'].'"%')
+                ->get();
+
+            foreach($contacts ?? [] as $contact) {
+
+                $unsubscribed = db()->table('iris_nieuwsbrieven_uitschrijvingen')
+                    ->select()
+                    ->where('email', $contact['email'])
+                    ->exists();
 
 
-        if ($nieuwsbrief["send"] == 1) {
-            $s = $this->makePopup('
-            <h4 class="mb-4">Verstuurd</h4>
-           <div class="d-flex w-100">
-                         <a href="/newsletter/viewSendTest/' . $argv[2] . '/' . explode("?", $argv[3])[0] . '" style="width: 50%;cursor: pointer" class="card btn mr-3 d-block">
-                        <div class="card-body text-center">
-                            <i class="fas fa-envelope p-2 text-dark" style="font-size: 50px;"></i>
-                            <h4 class="mt-4 text-dark">Test mail</h4>
-                        </div>
-                    </a>
-                    
-                    
-                       <span class="card btn ml-3 d-block">
-                        <div class="card-body text-center">
-                            <i class="fas fa-paper-plane p-2 text-dark" style="font-size: 50px;"></i>
-                            <h4 class="mt-4 text-dark">De nieuwsbrief is al verstuurd</h4>
-                        </div>
-                    </span>
-                    
-            </div>
-            </div>
-                        
-        ');
-        }else{
-            $s = $this->makePopup('
-            <h4 class="mb-4">Versturen</h4>
-            <div class="d-flex w-100">
-                         <a href="/newsletter/viewSendTest/' . $argv[2] . '/' . explode("?", $argv[3])[0] . '" style="width: 50%;cursor: pointer" class="card btn mr-3 d-block">
-                        <div class="card-body text-center">
-                            <i class="fas fa-envelope p-2 text-dark" style="font-size: 50px;"></i>
-                            <h4 class="mt-4 text-dark">Test mail</h4>
-                        </div>
-                    </a>
-                    
-                    
-                       <a href="/newsletter/viewSendNewsletter/' . $argv[2] . '"  style="width: 50%;cursor: pointer" class="card btn ml-3 d-block">
-                        <div class="card-body text-center">
-                            <i class="fas fa-paper-plane p-2 text-dark" style="font-size: 50px;"></i>
-                            <h4 class="mt-4 text-dark">Verstuur nieuwsbrief</h4>
-                        </div>
-                    </a>
-                    
-            </div>
-                        
-        ');
+                if ($unsubscribed) { continue; }
+                
+                    db()->table('iris_nieuwsbrieven_verzendlijst')->insert([
+                        'iris_nieuwsbrieven_id' => $newsletter['id'],
+                        'email' => $contact['email'],
+                        'created' => time()
+                    ])->execute();
+            }
+
+            echo json_encode([
+                'status' => 'success',
+                'clear' => 'all',
+                'message' => 'De nieuwsbrief is ingepland en zal binnen enkele minuten verstuurd worden.'
+            ]);
+            exit();
+
         }
-        echo $s;
-        exit();
-    }
-
-
-    public function viewSendNewsletter()
-    {
-        global $argv;
-
-        $nieuwsbrieven = db()->table('nieuwsbrieven')->select()->where('id',$argv["2"])->first();
-        $contacten = db()->table('nieuwsbrieven_contacten')->select()->get();
-
-
-        $s = $this->makePopup('
-                        <a href="/newsletter/viewSend/'.$argv[2].'" class="float-right" style="color:#000000"><b>Terug</b></a>
-                        <h4 class="mb-3">Verstuur nieuwsbrief</h4>
-                        <table class="table">
-                            <tr><td width="250"><b>Aantal aanmeldingen</b></td><td>'.count($contacten).'</td></tr>
-                            <tr><td><b>Onderwerp regel</b></td><td>'.$nieuwsbrieven["naam"].'</td></tr>
-                        </table>
-                        <form action="/newsletter/sendNewsletter/newsletter" class="validate">
-                            <input type="hidden" name="gender">
-                            <input type="hidden" name="id" value="'.$argv[2].'">
-                            <div class="feedback"></div>
-                            <button class="btn btn-warning w-100" type="submit">Versturen nieuwsbrief</button>
-                        </form>
-                        
-        ');
-        echo $s;
-        exit();
-    }
-
-
-    public function viewSendDone()
-    {
-        global $argv;
-
-        $s = $this->makePopup('
-                      
-                        <h2 class="mb-4">Nieuwsbrief verstuurd</h2>
-                        Done
-                        </form>
-                        
-        ');
-        echo $s;
-        exit();
-    }
-    public function viewSendTest()
-    {
-        global $argv;
-
-        $s = $this->makePopup('
-                        <a href="/newsletter/viewSend/'.$argv[2].'" class="float-right" style="color:#000000"><b>Terug</b></a>
-                        <h4 class="mb-4">Verstuur test mail</h4>
-                        <form action="/newsletter/sendNewsletter/test" class="validate">
-                        <input type="hidden" name="gender">
-                        <input type="hidden" name="id" value="'.$argv[2].'">
-                        <input type="text" class="form-control mb-3" name="email" value="'.$argv[3].'">
-                        <div class="feedback"></div>
-                        <button class="btn btn-warning w-100" type="submit">Versturen test mail</button>
-                        </form>
-                        
-        ');
-        echo $s;
-        exit();
     }
 }

@@ -8,7 +8,7 @@
       "titel": "Naam",
       "edit": "var"
     },
-    "subject": {
+    "onderwerpregel": {
       "titel": "Onderwerpregel",
       "edit": "var"
     }
@@ -28,7 +28,7 @@
         "required": "ja"
       }
     },
-    "lijst": {
+    "lijsten_id": {
       "titel": "Lijst",
       "edit": "sel",
       "db_table": "iris_nieuwsbrieven_lijsten",
@@ -71,14 +71,40 @@
       }
     }
   },
+  "settings": {
+    "settings": {
+      "sorteerbaar": "nee",
+      "seo": "ja",
+      "stats": "nee"
+    },
+    "options": {
+      "seo": {
+        "url": {
+          "required": "1",
+          "prefix": null
+        }
+      },
+      "order": {
+        "column": "id",
+        "direction": "asc"
+      },
+      "add_at": "bottom"
+    }
+  },
   "buttons": {
     "0": {
-      "titel": "Versturen",
-      "icon": "fas fa-paper-plane",
-      "url": "newsletter\/viewSend\/{id}\/{auth.email}",
+      "titel": "Testen",
+      "icon": "fas fa-solid fa-user-check",
+      "url": "newsletter\/test\/{id}\/popup\/{auth.email}",
       "target": "iframe"
     },
     "1": {
+      "titel": "Versturen",
+      "icon": "fas fa-paper-plane",
+      "url": "newsletter\/send\/{id}\/popup",
+      "target": "iframe"
+    },
+    "2": {
       "titel": "Dupliceren",
       "icon": "fas fa-copy",
       "url": "newsletter\/duplicate\/{id}",

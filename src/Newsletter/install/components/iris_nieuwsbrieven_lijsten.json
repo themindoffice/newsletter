@@ -1,9 +1,9 @@
 {
   "domein_id": "{DOMAIN_ID}",
-  "naam:": "Nieuwsbrief | Lijsten",
-  "table_name:": "iris_nieuwsbrieven_lijsten",
-  "presentatie:": "1",
-  "viewer:": {
+  "naam": "Nieuwsbrief | Lijsten",
+  "table_name": "iris_nieuwsbrieven_lijsten",
+  "presentatie": "1",
+  "viewer": {
     "naam": {
       "titel": "Naam",
       "edit": "var"
@@ -13,7 +13,7 @@
       "edit": "var"
     }
   },
-  "editor:": {
+  "editor": {
     "naam": {
       "titel": "Naam",
       "edit": "var",
@@ -22,5 +22,5 @@
       }
     }
   },
-  "template:": "detail_iris_nieuwsbrieven_lijsten"
+  "template": "detail_iris_nieuwsbrieven_lijsten"
 }

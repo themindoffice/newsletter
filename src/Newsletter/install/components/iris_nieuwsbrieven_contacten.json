@@ -1,9 +1,9 @@
 {
   "domein_id": "{DOMAIN_ID}",
-  "naam:": "Nieuwsbrief | Contacten",
-  "table_name:": "iris_nieuwsbrieven_contacten",
-  "presentatie:": "1",
-  "viewer:": {
+  "naam": "Nieuwsbrief | Contacten",
+  "table_name": "iris_nieuwsbrieven_contacten",
+  "presentatie": "1",
+  "viewer": {
     "voornaam": {
       "titel": "Voornaam",
       "edit": "var"
@@ -17,7 +17,7 @@
       "edit": "var"
     }
   },
-  "editor:": {
+  "editor": {
     "voornaam": {
       "titel": "Voornaam",
       "edit": "var",
@@ -39,7 +39,7 @@
         "required": "nee"
       }
     },
-    "lijsten": {
+    "lijsten_id": {
       "titel": "Lijsten",
       "edit": "msel",
       "db_table": "iris_nieuwsbrieven_lijsten",
@@ -50,5 +50,5 @@
       "required": "nee"
     }
   },
-  "template:": "detail_iris_nieuwsbrieven_contacten"
+  "template": "detail_iris_nieuwsbrieven_contacten"
 }
