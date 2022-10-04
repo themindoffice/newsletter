@@ -1,0 +1,35 @@
+{
+	"name": "themindoffice/newsletter",
+	"description": "Add newsletter addon to Iris",
+	"license": "MIT",
+	"type": "library",
+	"version": "1.0.0",
+	"authors": [{
+		"name": "The MindOffice",
+		"email": "development@themindoffice.nl"
+	}],
+	"require": {
+		"slowprog/composer-copy-file": "~0.3"
+	},
+	"autoload": {
+		"psr-4": {
+			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"SlowProg\\CopyFile\\ScriptHandler::copy"
+		],
+		"post-update-cmd": [
+			"SlowProg\\CopyFile\\ScriptHandler::copy"
+		]
+	},
+	"extra": {
+		"copy-file": {
+			"vendor/themindoffice/newsletter/src": "modules/Addons"
+		},
+		"copy-file-dev": {
+			"vendor/themindoffice/newsletter/src": "modules/Addons"
+		}
+	}
+}
