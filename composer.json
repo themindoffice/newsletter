@@ -1,4 +1,13 @@
 {
+	"name": "themindoffice/newsletter",
+	"description": "Add newsletter addon to Iris",
+	"license": "MIT",
+	"type": "library",
+	"version": "1.0.0",
+	"authors": [{
+		"name": "The MindOffice",
+		"email": "development@themindoffice.nl"
+	}],
 	"require":{
 		"twbs/bootstrap": "~3.3",
 		"slowprog/composer-copy-file": "~0.3"
