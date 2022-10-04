@@ -27,9 +27,6 @@
 	"extra": {
 		"copy-file": {
 			"vendor/themindoffice/newsletter/src/": "modules/Addons/"
-		},
-		"copy-file-dev": {
-			"vendor/themindoffice/newsletter/src/": "modules/Addons/"
 		}
 	}
 }
