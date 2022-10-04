@@ -21,13 +21,18 @@
 	},
 	"scripts": {
 		"post-install-cmd": [
-			"SlowProg\\CopyFile\\ScriptHandler::copy",
-			"# <info>For your info 1</info>",
-			"# <comment>A comment 1</comment>",
-			"# <error>Error!!!! 1</error>",
-			"# <href=https://symfony.com>Symfony Homepage 1</>"
+			"@copy"
 		],
 		"post-update-cmd": [
+			"@copy"
+		],
+		"post-root-package-install": [
+			"@copy"
+		],
+		"post-create-project-cmd": [
+			"@copy"
+		],
+		"copy": [
 			"SlowProg\\CopyFile\\ScriptHandler::copy",
 			"# <info>For your info 2</info>",
 			"# <comment>A comment 2</comment>",
