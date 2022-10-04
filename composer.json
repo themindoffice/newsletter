@@ -8,9 +8,13 @@
 		"name": "The MindOffice",
 		"email": "development@themindoffice.nl"
 	}],
-	"require":{
-		"twbs/bootstrap": "~3.3",
+	"require": {
 		"slowprog/composer-copy-file": "~0.3"
+	},
+	"autoload": {
+		"psr-4": {
+			"Modules\\Addons\\Newsletter\\": "src/Newsletter"
+		}
 	},
 	"scripts": {
 		"post-install-cmd": [
@@ -22,10 +26,10 @@
 	},
 	"extra": {
 		"copy-file": {
-			"vendor/twbs/bootstrap/dist/js/bootstrap.min.js": "web/js/bootstrap.js"
+			"vendor/themindoffice/newsletter/src": "modules/Addons"
 		},
 		"copy-file-dev": {
-			"vendor/twbs/bootstrap/dist/js/bootstrap.js": "web/js/bootstrap.js"
+			"vendor/themindoffice/newsletter/src": "modules/Addons"
 		}
 	}
 }
