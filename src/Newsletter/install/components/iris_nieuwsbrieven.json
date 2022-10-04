@@ -71,5 +71,19 @@
       }
     }
   },
+  "buttons": {
+    "0": {
+      "titel": "Versturen",
+      "icon": "fas fa-paper-plane",
+      "url": "newsletter\/viewSend\/{id}\/{auth.email}",
+      "target": "iframe"
+    },
+    "1": {
+      "titel": "Dupliceren",
+      "icon": "fas fa-copy",
+      "url": "newsletter\/duplicate\/{id}",
+      "target": "iframe"
+    }
+  },
   "template": "detail_iris_nieuwsbrieven"
 }

@@ -6,27 +6,29 @@ use Modules\Addons\Newsletter\Install\Installer;
 
 class Newsletter
 {
-    public function copy(){
+    public function duplicate() {
 
         global $argv;
 
-        $nieuwsbrief = db()->table('nieuwsbrieven')->select()->where('id',$argv[2])->first();
+        $newsletter = db()->table('iris_nieuwsbrieven')
+            ->select()
+            ->find($argv[2]);
 
-        $id = db()->table('nieuwsbrieven')->insert(array(
-            "naam" => "Copy: ".$nieuwsbrief["naam"],
-            "omschrijving" => $nieuwsbrief["omschrijving"],
-            "header_knop_titel" => $nieuwsbrief["header_knop_titel"],
-            "header_knop_link" => $nieuwsbrief["header_knop_link"],
-            "header_achtergrond" => $nieuwsbrief["header_achtergrond"],
-            "send" => 0,
-            "created" => time()
+        $id = db()->table('iris_nieuwsbrieven')->insert(array(
+            'naam' => 'Copy: '.$newsletter['naam'],
+            'omschrijving' => $newsletter['omschrijving'],
+            'header_knop_titel' => $newsletter['header_knop_titel'],
+            'header_knop_link' => $newsletter['header_knop_link'],
+            'header_achtergrond' => $newsletter['header_achtergrond'],
+            'send' => 0,
+            'created' => time()
         ))->execute();
 
         db()->table('seo')->insert(array(
-            "tabel" => 'nieuwsbrieven',
-            "tabel_id" => $id,
-            "page_url" => time(),
-            "language" => 'nl'
+            'tabel' => 'nieuwsbrieven',
+            'tabel_id' => $id,
+            'page_url' => time(),
+            'language' => 'nl'
         ))->execute();
 
         $items = db()->table('nieuwsbrieven_items')
@@ -38,25 +40,25 @@ class Newsletter
         foreach($items as $item){
 
             db()->table('nieuwsbrieven_items')->insert(array(
-                "naam" => $item["naam"],
-                "active" => $item["active"],
-                "nieuwsbrieven_id" => $id,
-                "type" => $item["type"],
-                "titel" => $item["titel"],
-                "tekst" => $item["tekst"],
-                "afbeelding" => $item["afbeelding"],
-                "knop_link" => $item["knop_link"],
-                "knop_link_titel" => $item["knop_link_titel"],
-                "confetti_tonen" => $item["confetti_tonen"],
-                "foto_locatie" => $item["foto_locatie"],
-                "rubriek" => $item["rubriek"],
-                "volgorde" => $item["volgorde"]
+                'naam' => $item['naam'],
+                'active' => $item['active'],
+                'nieuwsbrieven_id' => $id,
+                'type' => $item['type'],
+                'titel' => $item['titel'],
+                'tekst' => $item['tekst'],
+                'afbeelding' => $item['afbeelding'],
+                'knop_link' => $item['knop_link'],
+                'knop_link_titel' => $item['knop_link_titel'],
+                'confetti_tonen' => $item['confetti_tonen'],
+                'foto_locatie' => $item['foto_locatie'],
+                'rubriek' => $item['rubriek'],
+                'volgorde' => $item['volgorde']
             ))->execute();
 
         }
 
 
-        echo $s = $this->makePopup('
+        echo $this->makePopup('
             <h4 class="mb-4">Kopie gemaakt</h4>
             <p>Ververs de pagina om de nieuwsbrief te zien.</a>
                         
