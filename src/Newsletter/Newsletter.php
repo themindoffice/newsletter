@@ -120,7 +120,7 @@ class Newsletter
 
         } else {
 
-            parse_str($_POST['data'], $_POST);
+            //parse_str($_POST['data'], $_POST);
 
             validate([
                 'email' => 'email',
@@ -191,7 +191,7 @@ class Newsletter
             db()->table('iris_nieuwsbrieven')
                 ->update([
                     'html' => $content,
-//                    'sent_at' => time()
+                    'sent_at' => time()
                 ])->where('id', $newsletter['id'])
                 ->execute();
 
@@ -209,12 +209,12 @@ class Newsletter
 
 
                 if ($unsubscribed) { continue; }
-                
-                    db()->table('iris_nieuwsbrieven_verzendlijst')->insert([
-                        'iris_nieuwsbrieven_id' => $newsletter['id'],
-                        'email' => $contact['email'],
-                        'created' => time()
-                    ])->execute();
+
+                db()->table('iris_nieuwsbrieven_verzendlijst')->insert([
+                    'iris_nieuwsbrieven_id' => $newsletter['id'],
+                    'email' => $contact['email'],
+                    'created' => time()
+                ])->execute();
             }
 
             echo json_encode([
