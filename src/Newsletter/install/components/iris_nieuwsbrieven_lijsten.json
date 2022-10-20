@@ -4,13 +4,17 @@
   "table_name": "iris_nieuwsbrieven_lijsten",
   "presentatie": "1",
   "viewer": {
+    "id": {
+      "titel": "ID",
+      "edit": "hidden"
+    },
     "naam": {
       "titel": "Naam",
       "edit": "var"
     },
-    "aantal": {
+    "*": {
       "titel": "Aantal",
-      "edit": "var"
+      "query": "SELECT id FROM iris_nieuwsbrieven_contacten WHERE lijsten_id LIKE '%\"{id}\"%'"
     }
   },
   "editor": {
