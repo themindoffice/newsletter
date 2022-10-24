@@ -11,6 +11,13 @@
     "onderwerpregel": {
       "titel": "Onderwerpregel",
       "edit": "var"
+    },
+    "lijsten_id": {
+      "titel": "Lijst",
+      "edit": "sel",
+      "db_table": "iris_nieuwsbrieven_lijsten",
+      "db_id": "id",
+      "db_column": "naam"
     }
   },
   "editor": {

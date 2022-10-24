@@ -24,3 +24,5 @@ APP_DOMAIN=https://example.com
 MAIL_FROM_ADDRESS=example@mail.com
 MAIL_FROM_NAME="Example"
 ```
+
+2. Set the cronjob for sending.
