@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `iris_nieuwsbrieven`
     `omschrijving`      text COLLATE utf8_unicode_ci                DEFAULT NULL,
     `foto`              text COLLATE utf8_unicode_ci                DEFAULT NULL,
     `onderwerpregel`    varchar(255) COLLATE utf8_unicode_ci        DEFAULT NULL,
-    `lijsten_id`        varchar(255) COLLATE utf8_unicode_ci        DEFAULT NULL,
+    `lijsten_id`        int(9) COLLATE utf8_unicode_ci              DEFAULT NULL,
     `btn_link`          varchar(255) COLLATE utf8_unicode_ci        DEFAULT NULL,
     `btn_text`          varchar(255) COLLATE utf8_unicode_ci        DEFAULT NULL,
     `active`            enum('ja','nee') COLLATE utf8_unicode_ci    NOT NULL DEFAULT 'ja',

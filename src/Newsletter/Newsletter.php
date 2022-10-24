@@ -80,6 +80,8 @@ class Newsletter
                 ->select()
                 ->find($item['iris_nieuwsbrieven_id']);
 
+            $html = str_replace(['{address}'] , [$item['email']], $newsletter['html']);
+
             email()
                 ->sender([
                     'address' => $_ENV['MAIL_FROM_ADDRESS'],
@@ -88,7 +90,7 @@ class Newsletter
                 ->to($item['email'])
                 ->type('plain')
                 ->subject($newsletter['naam'])
-                ->message($newsletter['html'])
+                ->message($html)
                 ->send();
 
         }
@@ -119,8 +121,6 @@ class Newsletter
             ');
 
         } else {
-
-            //parse_str($_POST['data'], $_POST);
 
             validate([
                 'email' => 'email',
@@ -224,6 +224,103 @@ class Newsletter
             ]);
             exit();
 
+        }
+    }
+
+    public function unsubscribe()
+    {
+        global $argv;
+
+        if (count($argv) != 4) { abort(404); }
+
+        $list = db()->table('iris_nieuwsbrieven_lijsten')
+            ->select()
+            ->where('hash', $argv[2])
+            ->first();
+
+        $contact = db()->table('iris_nieuwsbrieven_contacten')
+            ->select()
+            ->where('email', $argv[3])
+            ->where('lijsten_id', 'like', '%"'.$list['id'].'"%')
+            ->first();
+
+        if (!$list || !$contact) { abort(404); }
+
+        $contact_lists = json_decode($contact['lijsten_id']) ?? [];
+        $key = array_search($list['id'], $contact_lists);
+
+        unset($contact_lists[$key]);
+
+        db()->table('iris_nieuwsbrieven_uitschrijvingen')->insert([
+            'lijsten_id' => $list['id'],
+            'email' => $contact['email'],
+            'created' => time()
+        ])->execute();
+
+        db()->table('iris_nieuwsbrieven_contacten')
+            ->update([
+                'lijsten_id' => json_encode($contact_lists)
+            ])->where('id', $contact['id'])
+            ->execute();
+
+        echo 'U bent succesvol uitgeschreven van deze maillijst...';
+    }
+
+    public function import()
+    {
+        $file = file(__dir__ . '/subscribers.csv');
+
+        $rows = array_map('str_getcsv', $file);
+        $headers = array_shift($rows);
+
+        $subscribers = [];
+
+        foreach ($rows ?? [] as $row) {
+            $subscribers[] =  array_combine($headers, $row);
+        }
+
+        foreach ($subscribers ?? [] as $email => $lists) {
+
+//            $exists = db()->table('iris_nieuwsbrieven_contacten')
+//                ->select()
+//                ->where('email', $email)
+//                ->exists();
+//
+//            if ($exists) { continue; }
+//
+//            $list_ids = [];
+//
+//            foreach ($lists ?? [] as $details) {
+//
+//                if (strtolower($details['lijst']) == 'niet in segment') { continue; }
+//
+//                $list_id = db()->table('iris_nieuwsbrieven_lijsten')
+//                        ->select()
+//                        ->where('naam', $details['lijst'])
+//                        ->first()['id'] ?? null;
+//
+//                if (!$list_id) {
+//
+//                    $list_id = db()->table('iris_nieuwsbrieven_lijsten')->insert([
+//                        'hash' => sha1(time() * rand(1, 999)),
+//                        'naam' => $details['lijst']
+//                    ])->execute();
+//
+//                }
+//
+//                $list_ids[] = (string) $list_id;
+//            }
+//
+//            $list_ids = array_unique($list_ids);
+//
+//            if (count($list_ids) == 0) { continue; }
+//
+//            db()->table('iris_nieuwsbrieven_contacten')->insert([
+//                'voornaam' => $details['voornaam'],
+//                'achternaam' => $details['achternaam'],
+//                'email' => $email,
+//                'lijsten_id' => json_encode($list_ids)
+//            ])->execute();
         }
     }
 }

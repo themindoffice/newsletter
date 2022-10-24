@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `iris_nieuwsbrieven_lijsten`
 (
     `id`           int(9) unsigned NOT NULL AUTO_INCREMENT,
+    `hash`         varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `naam`         varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `active`       enum('ja','nee') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ja',
     `options`      text COLLATE utf8_unicode_ci         DEFAULT NULL,

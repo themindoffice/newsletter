@@ -1,2 +1,2 @@
-INSERT INTO `iris_nieuwsbrieven_lijsten` (`id`, `naam`, `active`, `options`, `created`, `modified`) VALUES
-(1, 'Algemeen', 'ja', NULL, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+INSERT INTO `iris_nieuwsbrieven_lijsten` (`id`, `hash`, `naam`, `active`, `options`, `created`, `modified`) VALUES
+(1, '11b24bde053efc71b4dd226c880b0cb0b8f4e59f', 'Algemeen', 'ja', NULL, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
