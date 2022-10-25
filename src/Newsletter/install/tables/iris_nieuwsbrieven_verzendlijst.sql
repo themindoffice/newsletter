@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS `iris_nieuwsbrieven_verzendlijst`
     `iris_nieuwsbrieven_id` int(9) NOT NULL,
     `email`                 varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
     `sent_at`               int(11) DEFAULT NULL,
+    `info_checked_at`       int(11) DEFAULT NULL,
+    `mandrill`              text COLLATE utf8_unicode_ci DEFAULT NULL,
     `created`               int(11) DEFAULT NULL,
     `modified`              int(11) DEFAULT NULL,
     PRIMARY KEY (`id`)

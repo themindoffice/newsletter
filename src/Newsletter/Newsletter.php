@@ -63,36 +63,84 @@ class Newsletter
 
     public function cronjob() {
 
-        $items = db()->table('iris_nieuwsbrieven_verzendlijst')
-            ->select()
-            ->whereNull('sent_at')
-            ->limit(5)
-            ->get();
+        global $argv;
 
-        foreach($items ?? [] as $item) {
+        if ($argv[2] == 'send') {
 
-            db()->table('iris_nieuwsbrieven_verzendlijst')
-                ->update(['sent_at' => time()])
-                ->where('id', $item['id'])
-                ->execute();
-
-            $newsletter = db()->table('iris_nieuwsbrieven')
+            $items = db()->table('iris_nieuwsbrieven_verzendlijst')
                 ->select()
-                ->find($item['iris_nieuwsbrieven_id']);
+                ->whereNull('sent_at')
+                ->limit(25)
+                ->get();
 
-            $html = str_replace(['{address}'] , [$item['email']], $newsletter['html']);
+            foreach($items ?? [] as $item) {
 
-            email()
-                ->sender([
-                    'address' => $_ENV['MAIL_FROM_ADDRESS'],
-                    'name' => $_ENV['MAIL_FROM_NAME']
-                ])
-                ->to($item['email'])
-                ->type('plain')
-                ->subject($newsletter['naam'])
-                ->message($html)
-                ->send();
+                $newsletter = db()->table('iris_nieuwsbrieven')
+                    ->select()
+                    ->find($item['iris_nieuwsbrieven_id']);
 
+                $html = str_replace(['{address}'] , [$item['email']], $newsletter['html']);
+
+                $response = email('mandrill')
+                    ->to($item['email'])
+                    ->subject($newsletter['naam'])
+                    ->html($html)
+                    ->send();
+
+                if (is_array($response)) {
+
+                    $response = reset($response);
+
+                    $mandrill = [
+                        'id' => $response['_id']
+                    ];
+
+                    ksort($response);
+
+                    db()->table('iris_nieuwsbrieven_verzendlijst')
+                        ->update([
+                            'sent_at' => time(),
+                            'mandrill' => json_encode($mandrill)
+                        ])
+                        ->where('id', $item['id'])
+                        ->execute();
+
+                }
+
+            }
+
+        } elseif ($argv[2] == 'info') {
+
+            $items = db()->table('iris_nieuwsbrieven_verzendlijst')
+                ->select()
+                ->where('sent_at', '<=', strtotime('-30'))
+                ->whereNull('info_checked_at')
+                ->limit(25)
+                ->get();
+
+            foreach ($items ?? [] as $item) {
+
+                $mandrill = json_decode($item['mandrill'], true);
+
+                $info = email('mandrill')->info($mandrill['id']);
+
+                $mandrill = [
+                    'id' => $mandrill['id']
+                ];
+
+                foreach ($info ?? [] as $k => $v) {
+                    if (!in_array($k, ['state', 'opens', 'clicks']) && !preg_match('/(_reason|_description)/', $k)) { continue; }
+                    $mandrill[$k] = $v;
+                }
+
+                db()->table('iris_nieuwsbrieven_verzendlijst')
+                    ->update([
+                        'mandrill' => json_encode($mandrill),
+                        'info_checked_at' => time()
+                    ])->where('id', $item['id'])
+                    ->execute();
+
+            }
         }
     }
 
