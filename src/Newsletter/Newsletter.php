@@ -174,15 +174,10 @@ class Newsletter
                 'email' => 'email',
             ], 'nl');
 
-            email()
-                ->sender([
-                    'address' => $_ENV['MAIL_FROM_ADDRESS'],
-                    'name' => $_ENV['MAIL_FROM_NAME']
-                ])
+            email('mandrill')
                 ->to($_POST['email'])
-                ->type('plain')
                 ->subject('[TEST] ' . (output($newsletter['onderwerpregel']) != '' ? output($newsletter['onderwerpregel']) : output($newsletter['naam'])))
-                ->message(self::content($newsletter['id']))
+                ->html(self::content($newsletter['id']))
                 ->send();
 
             echo json_encode([
